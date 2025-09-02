@@ -96,7 +96,7 @@ while cnt > 0:
     bl = 0
     for i in range(len(nL)):
         while bl == 0:
-            1 == 1
+            1 ==1
 
 
 
