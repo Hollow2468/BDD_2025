@@ -16,12 +16,13 @@ def fr(n, L, A):
     else:
         for i in range(len(f0)):
             A1 = np.delete(A, f0[i], axis=1)
+            A1 = A1[:n,:]
             nsz = np.array([])
             L1 = fr(0 , nsz, A1)
             a, b = np.shape(A1)
-            if len(L1) == a:
+            if np.sum(L1 != -1) == a:
+                L1 = np.where(L1 >= f0[i], L1 + 1, L1)
                 L = np.append(L1, f0[i])
-                L = np.where(L >= f0[i], L + 1, L)
                 a, b = np.shape(A)
                 if n == a - 1:
                     return L
@@ -45,9 +46,12 @@ def hungarian_algorithm(cost_matrix, n_rows, n_cols, min_dim):
     iter_count = 0
     
     while iter_count < max_iter:
+        print('\nIteration', iter_count)
         ''' Use fr function to find assignment '''
         L = np.array([])
+        print('Input cost matrix:\n', cost_matrix)
         result = fr(0, L, cost_matrix)
+        print('fr function result:\n', result)
         
         # Check if we found a complete assignment
         complete_assignment = True
@@ -97,20 +101,26 @@ def hungarian_algorithm(cost_matrix, n_rows, n_cols, min_dim):
             for row in new_rows:
                 marked_rows.add(row)
         
+        print('Marked rows:\n', marked_rows)
+        print('Marked cols:\n', marked_cols)
+        print('Cost matrix:\n', cost_matrix)
+
         # Find minimum uncovered value
         min_val = float('inf')
         for row_idx in range(n_rows):
             for col_idx in range(n_cols):
-                if row_idx not in marked_rows and col_idx not in marked_cols:
+                if row_idx in marked_rows and col_idx not in marked_cols:
                     min_val = min(min_val, cost_matrix[row_idx, col_idx])
         
         if min_val == float('inf') or min_val == 0:
             break
+
+        print('Minimum uncovered value:\n', min_val)
         
         # Adjust matrix: add to covered rows, subtract from uncovered columns
         for row_idx in range(n_rows):
             for col_idx in range(n_cols):
-                if row_idx in marked_rows:
+                if row_idx not in marked_rows:
                     cost_matrix[row_idx, col_idx] += min_val
                 if col_idx not in marked_cols:
                     cost_matrix[row_idx, col_idx] -= min_val
@@ -194,10 +204,14 @@ def assignment(A, c):
 
 
 if __name__ == "__main__":
+    # Test 1
+    print("=" * 60)
+    print("Example 1")
+    print("=" * 60)
     A = np.array([[3,7,1],[8,2,5], [9,1,4], [6,3,7], [2,8,6], [5,4,9], [1,7,2]])
     c = np.array([3,2,4])
     
-    print("Original matrix:")
+    print("Simple matrix:")
     print(A)
     print("Column capacities:", c)
     
@@ -205,3 +219,80 @@ if __name__ == "__main__":
     print("Assignment result:")
     print(result)
     print(f"Matches: {np.sum(result)}/7")
+    
+    # Test 2
+    print("\n" + "=" * 60)
+    print("Example 2")
+    print("=" * 60)
+    
+    A2 = np.array([
+        [12, 8, 15, 6, 9, 11, 4, 7],
+        [5, 13, 2, 10, 14, 3, 8, 12],
+        [9, 4, 11, 7, 2, 15, 6, 13],
+        [3, 14, 8, 5, 12, 1, 9, 4],
+        [7, 2, 13, 9, 6, 8, 11, 3],
+        [15, 6, 4, 12, 1, 7, 2, 10],
+        [1, 9, 7, 3, 13, 5, 14, 8],
+        [11, 3, 6, 14, 8, 2, 5, 15],
+        [4, 12, 9, 1, 7, 13, 3, 6],
+        [8, 5, 2, 11, 4, 9, 12, 1]
+    ])
+    
+    c2 = np.array([2, 3, 1, 4, 2, 3, 1, 2])
+    
+    print("Complex matrix:")
+    print(A2)
+    print("Column capacities:", c2)
+    
+    result2 = assignment(A2, c2)
+    print("Assignment result:")
+    print(result2)
+    print(f"Matches: {np.sum(result2)}/{A2.shape[0]}")
+    
+    # Test 3
+    print("\n" + "=" * 60)
+    print("Example 3")
+    print("=" * 60)
+    
+    A3 = np.array([
+        [4, 2, 6],
+        [3, 5, 2],
+        [1, 3, 4],
+        [5, 1, 3],
+        [2, 4, 1]
+    ])
+    
+    c3 = np.array([1, 2, 1])
+    
+    print("Limited capacity matrix:")
+    print(A3)
+    print("Column capacities:", c3)
+    
+    result3 = assignment(A3, c3)
+    print("Assignment result:")
+    print(result3)
+    print(f"Matches: {np.sum(result3)}/{A3.shape[0]}")
+    
+    # Test 4
+    print("\n" + "=" * 60)
+    print("Example 4")
+    print("=" * 60)
+    
+    A4 = np.array([
+        [100, 95, 90, 85],
+        [80, 75, 70, 65],
+        [60, 55, 50, 45],
+        [40, 35, 30, 25],
+        [20, 15, 10, 5]
+    ])
+    
+    c4 = np.array([1, 2, 1, 1])
+    
+    print("High cost matrix:")
+    print(A4)
+    print("Column capacities:", c4)
+    
+    result4 = assignment(A4, c4)
+    print("Assignment result:")
+    print(result4)
+    print(f"Matches: {np.sum(result4)}/{A4.shape[0]}")
