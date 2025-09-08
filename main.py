@@ -69,7 +69,7 @@ def hungarian_algorithm(cost_matrix, n_rows, n_cols, min_dim):
                     assignment_matrix[i, int(col_idx)] = 1
             return assignment_matrix
         
-        ''' Matrix adjustment: find minimum uncovered value and adjust '''
+        ''' Matrix adjustment'''
         # Find unmatched rows
         unmatched = [i for i in range(n_rows) if i >= len(result) or result[i] == -1]
         if not unmatched:
