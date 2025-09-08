@@ -72,7 +72,7 @@ def hungarian_algorithm(cost_matrix, n_rows, n_cols, min_dim):
     '''
     Hungarian algorithm iteration with row priority (when n_rows <= n_cols)
     '''
-    max_iter = 50
+    max_iter = 42
     iter_count = 0
 
     while iter_count < max_iter:
