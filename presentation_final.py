@@ -88,7 +88,7 @@ class HospitalDoctorAssignmentDemo:
         ttk.Label(self.custom_ranking_frame, text="Custom Rankings:").grid(row=0, column=0, sticky=tk.W, columnspan=2)
         self.ranking_text = scrolledtext.ScrolledText(self.custom_ranking_frame, width=30, height=5)
         self.ranking_text.grid(row=1, column=0, columnspan=2, pady=5)
-        ttk.Button(self.custom_ranking_frame, text="Load Example", command=self.load_example_rankings).grid(row=2,
+        ttk.Button(self.custom_ranking_frame, text="Load ex.", command=self.load_example_rankings).grid(row=2,
                                                                                                             column=0,
                                                                                                             pady=2)
         ttk.Button(self.custom_ranking_frame, text="Clear", command=self.clear_rankings).grid(row=2, column=1, pady=2)
@@ -171,15 +171,10 @@ class HospitalDoctorAssignmentDemo:
         """Update interface when hospital count changes"""
         if self.capacity_method.get() == "custom":
             self.setup_capacity_inputs()
+#load example
 
     def load_example_rankings(self):
-        """Load example ranking data"""
-        example_text = """D0: H2, H0, H1
-D1: H1, H2, H0  
-D2: H0, H1, H2
-D3: H2, H0, H1
-D4: H0, H2, H1
-# Format: Doctor: Hospital1, Hospital2, Hospital3"""
+        example_text = """D0: H2, H0, H1"""
         self.ranking_text.delete(1.0, tk.END)
         self.ranking_text.insert(1.0, example_text)
 
@@ -572,7 +567,7 @@ D4: H0, H2, H1
 
         # Show assignment results
         if self.assigned:
-            self.result_text.insert(tk.END, "Assignment results:\n")
+            self.result_text.insert(tk.END, "Assignment results (Based on Doctors):\n")
             self.result_text.insert(tk.END, "=" * 40 + "\n")
             for doc in self.doctors:
                 hosp = self.assigned[doc]
@@ -581,7 +576,25 @@ D4: H0, H2, H1
                 rank = "N/A" if hosp is None or hosp not in pref else str(pref.index(hosp) + 1)
                 self.result_text.insert(tk.END, f"{doc}: {status} (Pref rank: {rank})\n")
 
+        # Show results 2.0
+            if self.assigned:
+                self.result_text.insert(tk.END, "Assignment results (Based on Hospitals):\n")
+                self.result_text.insert(tk.END, "=" * 40 + "\n")
 
+            for hosp in self.hospitals:
+                if hosp == "Not assigned":
+                    self.result_text.insert(tk.END, f"\n Unassigned doctors:\n")
+                else:
+                    self.result_text.insert(tk.END, f"\n{hosp}:\n")
+                self.result_text.insert(tk.END, "-" * 30 + "\n")
+
+                for doc, assigned_hosp in self.assigned.items():
+                    if (hosp == "Not assigned" and assigned_hosp is None) or assigned_hosp == hosp:
+                        pref = self.preferences[doc]
+                        rank = "N/A" if assigned_hosp is None or assigned_hosp not in pref else str(
+                            pref.index(assigned_hosp) + 1)
+                        status = "Not assigned" if assigned_hosp is None else f"Assigned"
+                        self.result_text.insert(tk.END, f"  {doc} ({status}, Preference rank: {rank})\n")
 
             # Show cost matrix in detail area
             cost_matrix = self.prefs_to_cost(self.doctors, self.hospitals, self.preferences)
