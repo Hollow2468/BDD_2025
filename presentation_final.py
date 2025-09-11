@@ -235,8 +235,8 @@ class HospitalDoctorAssignmentDemo:
                 np.random.shuffle(pref)
                 self.preferences[doc] = pref
 
+        #rank input
     def parse_custom_rankings(self):
-        """Parse custom ranking input"""
         text = self.ranking_text.get(1.0, tk.END).strip()
         lines = text.split('\n')
 
