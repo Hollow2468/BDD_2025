@@ -413,7 +413,7 @@ if __name__ == "__main__":
         w_doc = max(6, max(len(str(r[0])) for r in rows + [("Doctor", None, None, None)]))
         w_hos = max(8, max(len(str(r[1])) for r in rows + [(None, "Hospital", None, None)]))
         w_st = max(10, max(len(str(r[2])) for r in rows + [(None, None, "Status", None)]))
-        w_rk = max(4, len("Rank"))
+        w_rk = max(5, len("Rank"))
 
         print("\n=== Assignment DOC to Hospitals ===")
         print(f"{'Doctor':<{w_doc}} {'Hospital':<{w_hos}} {'Status':<{w_st}} {'Rank':>{w_rk}}")
@@ -429,15 +429,15 @@ if __name__ == "__main__":
     if __name__ == "__main__":
         doctors = ["D0", "D1", "D2", "D3", "D4", "D5", "D6", "D7", "D8", "D9"]
         hospitals = ["H0", "H1", "H2"]
-        capacities = {"H0": 1, "H1": 3, "H2": 4}
+        capacities = {"H0": 3, "H1": 3, "H2": 1}
 
         preferences = {
-            "D0": ["H0", "H1", "H2"],
-            "D1": ["H1", "H0", "H2"],
+            "D0": ["H2", "H0", "H1"],
+            "D1": ["H2", "H0", "H1"],
             "D2": ["H2", "H0", "H1"],
-            "D3": ["H0", "H2", "H1"],
-            "D4": ["H1", "H2", "H0"],
-            "D5": ["H2", "H1", "H0"],
+            "D3": ["H2", "H0", "H1"],
+            "D4": ["H2", "H0", "H1"],
+            "D5": ["H2", "H0", "H1"],
             "D6": ["H0", "H1", "H2"],
             "D7": ["H1", "H2", "H0"],
             "D8": ["H2", "H0", "H1"],
@@ -452,8 +452,8 @@ if __name__ == "__main__":
         print_table_ascii(doctors, hospitals, preferences, assigned, eliminated)
 
         m = compute_metrics(doctors, preferences, assigned)
-        print("\n=== Metrics ===")
+        print("\n=== Rank of the Doc ===")
         print("Average rank:", m["avg_rank"])
-        print("Top-1 rate:", m["top1"])
-        print("Top-2 rate:", m["top2"])
-        print("Rank histogram:", m["hist"])
+        print("Top-1 rank rate:", m["top1"])
+        print("Top-2 rank rate:", m["top2"])
+        print("Top-3 rank rate:"),m["top3"]
