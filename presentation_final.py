@@ -167,8 +167,8 @@ class HospitalDoctorAssignmentDemo:
             ttk.Spinbox(self.custom_capacity_frame, from_=1, to=20, textvariable=cap_var, width=5).grid(
                 row=i + 1, column=1, sticky=tk.W, pady=2, padx=(5, 0))
 
+        #Update when count changes
     def on_hospital_count_change(self, *args):
-        """Update interface when hospital count changes"""
         if self.capacity_method.get() == "custom":
             self.setup_capacity_inputs()
 #load example
