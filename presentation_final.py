@@ -91,7 +91,6 @@ class HospitalDoctorAssignmentDemo:
         ttk.Button(self.custom_ranking_frame, text="Load ex.", command=self.load_example_rankings).grid(row=2,
                                                                                                             column=0,
                                                                                                             pady=2)
-        ttk.Button(self.custom_ranking_frame, text="Clear", command=self.clear_rankings).grid(row=2, column=1, pady=2)
 
         # Bind events
         self.capacity_method.trace('w', self.toggle_capacity_input)
@@ -127,31 +126,29 @@ class HospitalDoctorAssignmentDemo:
         self.assigned = {}
         self.eliminated = []
 
-        # 添加缺失的变量
+        # add hidden data
         self.max_capacity = tk.IntVar(value=4)
 
         self.generate_data()
         self.update_display()
 
-    # 添加缺失的方法
+    # show the hidden capacity
     def toggle_capacity_input(self, *args):
-        """Show or hide custom capacity input"""
         if self.capacity_method.get() == "custom":
             self.custom_capacity_frame.grid()
             self.setup_capacity_inputs()
         else:
             self.custom_capacity_frame.grid_remove()
+    #show the self pref ranking
 
     def toggle_ranking_input(self, *args):
-        """Show or hide custom ranking input"""
         if self.ranking_method.get() == "custom":
             self.custom_ranking_frame.grid()
         else:
             self.custom_ranking_frame.grid_remove()
 
+#Set up hospital capacity
     def setup_capacity_inputs(self):
-        """Setup hospital capacity input fields"""
-        # Clear old input fields
         for widget in self.custom_capacity_frame.grid_slaves():
             if int(widget.grid_info()["row"]) >= 1:
                 widget.destroy()
@@ -178,9 +175,7 @@ class HospitalDoctorAssignmentDemo:
         self.ranking_text.delete(1.0, tk.END)
         self.ranking_text.insert(1.0, example_text)
 
-    def clear_rankings(self):
-        """Clear ranking input"""
-        self.ranking_text.delete(1.0, tk.END)
+
 
     def generate_data(self):
         # list of D
